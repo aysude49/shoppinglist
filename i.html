@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore-compat.js"></script>
+<script src="firebaseconfig.js"></script>	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<title>Alışveriş Listesi</title>
+</head>
+
+<!-- <style>
+	body{
+		background-image: url("images.jfif");
+	}	5
+</style> -->
+
+<body>
+	<div id="editToastContainer"></div>
+	<div class="container p-3">	
+		<h2 class="app-title" id="header"><i class="fa fa-shopping-basket" ></i> Alışveriş Listesi</h2>	
+		<div class="card" >
+			<div class="card-header" style="background-color: rgb(251, 193, 33);">
+				<i class="fa fa-plus-square" ></i> Yeni Ürün
+			</div>
+			<div class="card-body">
+				<form >
+					<div class="input-group mb-3">
+                        <input style="margin-right:5px;border-radius: 5px;" id="numberInput" type="number" min="0" max="99" class="form-control" placeholder="Adet">
+						<input style="width: 250px; margin-right:5px;border-radius: 5px;" id="itemInput" type="text" class="form-control" placeholder="Eklemek İstediğiniz Ürünü Yazın">
+							<button class="btn btn-danger" type="button"  id="addButton">
+								<i class="fa fa-plus"></i>
+							</button>
+                            <div id="error-message" style="color: red;"></div>
+							
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="card mt-3">
+			<div class="card-header" style="background-color: rgb(251, 193, 33);">
+				<i class="fa fa-info-circle"></i> Bilgiler
+			</div>
+			<div class="card-body">
+				<p>Alınan Ürün Sayısı: <span id="checkedItemCount">0</span></p>
+				<p>Kalan Ürün Sayısı: <span id="remainingItemCount">0</span></p>
+			</div>
+		</div>
+		<div class="card mt-3" style="background-color: rgb(251, 193, 33);">
+			<div class="card-header" >
+				<i class="fa fa-list" ></i>
+				Liste 
+                <button class="btn btn-danger btn-sm float-right" id="deleteAll">
+                    <i class="fa fa-trash"></i> Hepsini Sil
+                </button>
+			</div>
+			<ul id="shoppingList" class="list-group"></ul>
+		</div>
+	</div>
+</div>
+
+	<script src="js.js" > </script>	
+<script src="local.js" > </script>
+</body>
+
+</html>
