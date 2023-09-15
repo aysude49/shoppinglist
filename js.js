@@ -5,6 +5,11 @@ const number = document.getElementById('numberInput');
 const deleteAll = document.getElementById('deleteAll');
 
 addButton.addEventListener('click', addItem);
+itemInput.addEventListener("keydown", function() {
+    if (e.key === "Enter") {
+        addItem();
+    }
+});
 window.addEventListener("load", function(){
     countRemainingItems();
     if(navigator.onLine){
@@ -198,6 +203,8 @@ function deleteItem(key) {
         .then(()=> {
             showToast('Ürün başarıyla silindi');
             countRemainingItems()
+        }).catch(()=> {
+            showToast('Ürün silinemedi');
         })
     }
 }
