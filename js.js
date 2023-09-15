@@ -170,8 +170,6 @@ function editItem(key, item, num) {
     const userInput = prompt('Lütfen adedi ve en az iki harften oluşan yeni ürünü girin (örneğin: "5 Yeni Ürün"): ', `${num} ${item}`);
     if (userInput !== null) {
         const [updatedNum, updatedItem] = userInput.split(' ');
-
-        // Validate the input
         const itemHasNumbers = /\d/.test(updatedItem);
         if (!isNaN(updatedNum) && updatedItem.trim().length >= 2 && !itemHasNumbers) {
             db.collection('shoppingList').doc(key).update({ 
@@ -211,17 +209,16 @@ deleteAll.addEventListener('click', function(){
     db.collection('shoppingList').get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             db.collection('shoppingList').doc(doc.id).delete();
+            countRemainingItems()
         }) })
 })
 function showToast(message) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.classList.add('show');
-
-    // Hide the toast after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
-    }, 3000);
+    }, 4000);
 }
 
 
