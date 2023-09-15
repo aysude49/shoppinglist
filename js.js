@@ -29,37 +29,43 @@ function addItem() {
     const newItem = itemInput.value.trim();
     const ItemNumber = numberInput.value.trim();
     const characterCount = newItem.length;
-    const errorMessage = document.getElementById('error-message');
+
+    // Check if newItem contains numbers
+    const containsNumbers = /\d/.test(newItem);
+
     if (newItem !== '') {
-        if (/^[0-9]+[a-zA-z]$/.test(newItem) || /^[a-zA-z]+[0-9]$/.test(newItem)) {
-            errorMessage.textContent = "Lütfen yalnızca ürün ismi giriniz."
-        }else{
-            if(characterCount >= 2){
-                if(ItemNumber >=1){
+        if (containsNumbers) {
+            showToast("Lütfen yalnızca harflerden oluşan bir ürün ismi giriniz.");
+        } else {
+            if (characterCount >= 2) {
+                if (ItemNumber >= 1) {
                     if (navigator.onLine) {
-                        addToFirebase(ItemNumber,newItem);
+                        addToFirebase(ItemNumber, newItem);
                     } else {
-                        addToLocalStorage(ItemNumber,newItem);
+                        addToLocalStorage(ItemNumber, newItem);
                     }
                     numberInput.value = '';
                     itemInput.value = '';
                     numberInput.value = '';
-                    errorMessage.textContent ='';
-            }else{
-                if (navigator.onLine) {
-                    addToFirebase(1,newItem);
                 } else {
-                    addToLocalStorage(1,newItem);
+                    if (navigator.onLine) {
+                        addToFirebase(1, newItem);
+                    } else {
+                        addToLocalStorage(1, newItem);
+                    }
+                    numberInput.value = '';
+                    itemInput.value = '';
+                    numberInput.value = '';
                 }
-                numberInput.value = '';
-                itemInput.value = '';
-                numberInput.value = '';
-                errorMessage.textContent ='';
+            } else {
+                showToast("Lütfen tam ürün ismi giriniz.");
             }
-        }else{errorMessage.textContent = "Lütfen tam ürün ismi giriniz";}
+        }
+    } else {
+        showToast("Lütfen ürün ismi giriniz.");
     }
-} else{errorMessage.textContent = "Lütfen ürün ismi giriniz.";}
 }
+
 function addToFirebase(ItemNumber, newItem) {
     db.collection('shoppingList').add({
         number: ItemNumber,
@@ -165,7 +171,6 @@ function countRemainingItems() {
         });
 }
 
-
 function editItem(key, item, num) {
     const userInput = prompt('Lütfen adedi ve en az iki harften oluşan yeni ürünü girin (örneğin: "5 Yeni Ürün"): ', `${num} ${item}`);
     if (userInput !== null) {
@@ -185,8 +190,6 @@ function editItem(key, item, num) {
         }
     }
 }
-
-
 
 function deleteItem(key) {
     const confirmation = confirm('Ürünü silmek istediğinize emin misiniz?');
