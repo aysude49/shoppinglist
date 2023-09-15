@@ -60,19 +60,19 @@ function deleteItemLocally(itemName) {
     }
 }
 
-function editItemLocally(itemName) {
+function editItemLocally(itemName, itemNumber) {
+    const updatednum = prompt(`"${itemName}" ürününün adedini güncelleyin:`,itemNumber );
     const updatedItem = prompt(`"${itemName}" ürününü güncelleyin:`, itemName);
     if (updatedItem !== null) {
         if (localStorage.getItem("offlineData") !== null) {
             const offlineData = JSON.parse(localStorage.getItem("offlineData"));
-
             offlineData.forEach(function (data) {
                 if (data.name === itemName) {
                     data.name = updatedItem;
+                    data.number = updatednum;
                 }
             });
             localStorage.setItem("offlineData", JSON.stringify(offlineData));
-
         }
     }
 }

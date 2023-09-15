@@ -1,0 +1,18 @@
+.toast {
+    visibility: hidden;
+    width: 300px;
+    padding: 16px;
+    background-color: rgba(251, 193, 33);
+    color: #0b0b0b;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    border-radius: 8px;
+}
+
+.toast.show {
+    visibility: visible;
+}

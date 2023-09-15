@@ -67,6 +67,8 @@ function addToFirebase(ItemNumber, newItem) {
         checked: false 
     }).then((docRef) => {
         console.log(docRef.id);
+        showToast('Ürün başarıyla eklendi');
+        countRemainingItems()
         db.collection('shoppingList').onSnapshot(function(querySnapshot) {
             shoppingList.innerHTML = '';
             querySnapshot.forEach(function(doc) {
@@ -94,7 +96,7 @@ function addToFirebase(ItemNumber, newItem) {
         });
     });
 }
- function ShoppingList(){
+function ShoppingList(){
      db.collection('shoppingList').onSnapshot(function(querySnapshot) {
         shoppingList.innerHTML = '';
         querySnapshot.forEach(function(doc) {
@@ -118,18 +120,27 @@ function addToFirebase(ItemNumber, newItem) {
                 </button>
             `;
             shoppingList.appendChild(listItem);
-            
         });
     });
-} 
+}  
 
 function checkBtn(key, checked) {
-    const itemRef = db.collection('shoppingList').doc(key);
-    itemRef.update({
-        checked: !checked 
-    });
-    countRemainingItems()
+    let confirmationMessage = checked
+        ? 'Ürünün tikini kaldırmak mı istiyorsunuz?'
+        : 'Ürünü aldınız mı?';
+
+    const confirmation = confirm(confirmationMessage);
+    if (confirmation) {
+        const itemRef = db.collection('shoppingList').doc(key);
+        itemRef.update({
+            checked: !checked
+        }).then(() => {
+            showToast('Ürün durumu güncellendi');
+            countRemainingItems();
+        });
+    }
 }
+
 function countRemainingItems() {
     db.collection('shoppingList').get()
         .then((querySnapshot) => {
@@ -144,7 +155,7 @@ function countRemainingItems() {
                 }
             });
             if(remainingItemCount === 0){
-                console.log('alisveris bitti');
+                showToast('Listenizi bitirdiniz')
             }
             document.getElementById('checkedItemCount').textContent = checkedItemCount;
             document.getElementById('remainingItemCount').textContent = remainingItemCount;
@@ -156,20 +167,37 @@ function countRemainingItems() {
 
 
 function editItem(key, item, num) {
-    const updatenum = prompt('adedi güncelleyin:', num);
-    const updatedItem = prompt('Ürünü güncelleyin:', item);
-    if (updatedItem !== null) {
-        db.collection('shoppingList').doc(key).update({ 
-            name: updatedItem ,
-            number : updatenum,
-            checked: false
-        });
+    const userInput = prompt('Lütfen adedi ve en az iki harften oluşan yeni ürünü girin (örneğin: "5 Yeni Ürün"): ', `${num} ${item}`);
+    if (userInput !== null) {
+        const [updatedNum, updatedItem] = userInput.split(' ');
+
+        // Validate the input
+        const itemHasNumbers = /\d/.test(updatedItem);
+        if (!isNaN(updatedNum) && updatedItem.trim().length >= 2 && !itemHasNumbers) {
+            db.collection('shoppingList').doc(key).update({ 
+                name: updatedItem.trim(),
+                number: parseInt(updatedNum),
+                checked: false
+            }).then(() => {
+                showToast('Ürün başarıyla güncellendi');
+                countRemainingItems();
+            });
+        } else {
+            alert('Geçersiz giriş. Lütfen önce ürün adedini sonra da en az iki harften oluşan ve rakam içermeyen ürün adını giriniz.');
+        }
     }
 }
+
+
+
 function deleteItem(key) {
     const confirmation = confirm('Ürünü silmek istediğinize emin misiniz?');
     if (confirmation) {
-        db.collection('shoppingList').doc(key).delete();
+        db.collection('shoppingList').doc(key).delete()
+        .then(()=> {
+            showToast('Ürün başarıyla silindi');
+            countRemainingItems()
+        })
     }
 }
 
@@ -185,6 +213,15 @@ deleteAll.addEventListener('click', function(){
             db.collection('shoppingList').doc(doc.id).delete();
         }) })
 })
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
 
+    // Hide the toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
 
 
